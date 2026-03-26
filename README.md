@@ -1,6 +1,4 @@
-# ECON6750
-
-# NHANES Analysis: Daily Sugar Intake and Mental Health (PHQ-9)
+# ECON6750 NHANES Analysis: Daily Sugar Intake and Mental Health (PHQ-9)
 
 ## Project Overview
 This repository contains a causal inference study investigating the relationship between **daily total sugar intake (grams)** and **depression severity**. The analysis utilizes data from the **2017-2018 NHANES cycle** (Cycle J).
