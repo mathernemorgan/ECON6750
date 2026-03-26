@@ -5,6 +5,36 @@ This repository contains a causal inference study investigating the relationship
 
 The core research question asks: *Does daily sugar intake affect mental health after controlling for socioeconomic and behavioral confounders?*
 
+## Quick Start (Recreation)
+To replicate the results on your machine:
+
+1.  **Open the Project:** Launch `ECON4750.Rproj` in RStudio.
+2.  **Get the Data:** We aren't tracking the 10MB of raw data files in Git. Run the following in your console to download them directly from the CDC:
+    ```R
+    source("download_data.R")
+    ```
+3.  **Install Libraries:** Ensure you have the required packages:
+    ```R
+    install.packages(c("haven", "tidyverse", "mice"))
+    ```
+4.  **Run Analysis:** Execute `script.R`.
+
+---
+
+## Data Dictionary & Verification
+If you need to check how the CDC coded a specific variable or response (e.g., what does "Value 2" mean for marital status?), use these direct links to the official codebooks:
+
+* [**Demographics (DEMO_J)**](https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.htm): Age, Income-to-Poverty Ratio (`INDFMPIR`), Education, Marital Status.
+* [**Dietary Recall (DR1TOT_J)**](https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DR1TOT_J.htm): Total Sugar (`DR1TSUGR`), Total Calories, Caffeine.
+* [**Depression Screener (DPQ_J)**](https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DPQ_J.htm): The 9 symptoms used to calculate our `phq9_total`.
+* [**Sleep Disorders (SLQ_J)**](https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/SLQ_J.htm): Troubleshooting sleep quality.
+* [**Food Security (FSQ_J)**](https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/FSQ_J.htm): Adult food security categories.
+* [**Smoking (SMQ_J)**](https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/SMQ_J.htm): Recent cigarette use.
+* [**Alcohol Use (ALQ_J)**](https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/ALQ_J.htm): Alcohol consumption frequency.
+* [**Physical Activity (PAQ_J)**](https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/PAQ_J.htm): Vigorous work/recreation activity.
+
+---
+
 ## Methodology
 
 ### 1. Data Integration & Cleaning
