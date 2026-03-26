@@ -15,7 +15,7 @@ Data was merged from eight NHANES components using the `SEQN` (Respondent Sequen
 * **Refusal Handling:** Participant responses of "Refused" (7) or "Don't Know" (9) were recoded as `NA` to avoid skewing the scoring system.
 
 ### 2. Multiple Imputation (MICE)
-To handle missingness in dietary data and sensitive demographic questions (like income), I used **Multivariate Imputation by Chained Equations (MICE)** with **Predictive Mean Matching (PMM)**. This generated five unique imputed datasets to ensure the final estimates account for the uncertainty of the missing values.
+To handle missingness in dietary data and sensitive demographic questions (like income), we used **Multivariate Imputation by Chained Equations (MICE)** with **Predictive Mean Matching (PMM)**. This generated five unique imputed datasets to ensure the final estimates account for the uncertainty of the missing values.
 
 ### 3. Econometric Model
 A pooled linear regression was executed across the imputed datasets. The model controls for:
