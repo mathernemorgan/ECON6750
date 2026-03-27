@@ -1,39 +1,90 @@
-# download_data.R
-# This script downloads the required NHANES 2017-2018 files directly from the CDC.
+# =========================================================
+# 01_download_data.R
+# Download NHANES tables using nhanesA and save locally
+# for reproducibility
+# =========================================================
 
-# List of components needed for the analysis
-nhanes_files <- c(
-  "DEMO_J",   # Demographics
-  "DR1TOT_J", # Dietary Recall - Day 1
-  "DPQ_J",    # Depression Screener
-  "ALQ_J",    # Alcohol Use
-  "FSQ_J",    # Food Security
-  "PAQ_J",    # Physical Activity
-  "SMQ_J",    # Smoking - Recent Use
-  "SLQ_J"     # Sleep Disorders
+rm(list = ls())
+
+install.packages("nhanesA")
+library(nhanesA)
+
+# -----------------------------
+# Survey cycles
+# -----------------------------
+cycles <- data.frame(
+  cycle_folder = c("2011-2012", "2013-2014", "2015-2016", "2017-2018"),
+  suffix = c("G", "H", "I", "J"),
+  stringsAsFactors = FALSE
 )
 
-base_url <- "https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/"
+# -----------------------------
+# Files to download
+# -----------------------------
+file_roots <- c(
+  "DEMO",
+  "DR1TOT",
+  "DPQ",
+  "ALQ",
+  "PAQ",
+  "SMQ",
+  "SLQ",
+  "FSQ",
+  "BMX"
+)
 
-message("Starting downloads from CDC...")
+# -----------------------------
+# Create data folders
+# -----------------------------
+if (!dir.exists("data")) dir.create("data")
+if (!dir.exists("data/raw")) dir.create("data/raw", recursive = TRUE)
 
-for (file_name in nhanes_files) {
-  dest_file <- paste0(file_name, ".xpt")
+# -----------------------------
+# Download + save function
+# -----------------------------
+download_nhanes_table <- function(file_code, cycle_folder) {
   
-  # Only download if the file doesn't already exist
-  if (!file.exists(dest_file)) {
-    url <- paste0(base_url, file_name, ".XPT")
-    message(paste("Downloading:", file_name))
-    
-    # mode = "wb" is critical for downloading binary files like .xpt on Windows
-    tryCatch({
-      download.file(url, destfile = dest_file, mode = "wb")
-    }, error = function(e) {
-      message(paste("Failed to download:", file_name, "-", e$message))
-    })
-  } else {
-    message(paste("File already exists, skipping:", file_name))
+  out_dir <- file.path("data", "raw", cycle_folder)
+  if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
+  
+  out_file <- file.path(out_dir, paste0(file_code, ".rds"))
+  
+  if (file.exists(out_file)) {
+    message("Already saved, skipping: ", out_file)
+    return(invisible(NULL))
+  }
+  
+  message("Downloading: ", file_code)
+  
+  tryCatch({
+    dat <- nhanes(file_code)
+    saveRDS(dat, out_file)
+    message("Saved: ", out_file, 
+            " | Rows: ", nrow(dat), 
+            " | Cols: ", ncol(dat))
+  }, error = function(e) {
+    message("Failed: ", file_code, " | ", e$message)
+  })
+}
+
+# -----------------------------
+# Run downloads
+# -----------------------------
+for (i in seq_len(nrow(cycles))) {
+  cycle_folder <- cycles$cycle_folder[i]
+  suffix <- cycles$suffix[i]
+  
+  message("")
+  message("======================================")
+  message("Cycle: ", cycle_folder)
+  message("======================================")
+  
+  for (file_root in file_roots) {
+    file_code <- paste0(file_root, "_", suffix)
+    download_nhanes_table(file_code, cycle_folder)
   }
 }
 
+message("")
 message("All downloads completed.")
+
